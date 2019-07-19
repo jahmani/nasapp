@@ -1,0 +1,38 @@
+<div class="row-devider" [class.tree-branch]="!isRoot"></div>
+<!-- <p>{{people|json}}</p> -->
+<ion-slides [options]="slidesOpts"  (ionSlideDidChange)="onSlideChange(childSlides)">
+
+  <ion-slide class="avatar-slide" *ngFor="let person of (lParent? lParent.ext.sons : people), let i=index">
+    <ion-avatar (click)="onPersonClick(i, $event)" class="scroll-item"> <img src="../../../assets/avatar.svg">
+      <span class="no-wrap-text name-text">{{person.data.name}}</span>
+    </ion-avatar>
+    <ion-fab *ngIf="activeIndex === i && showOption" vertical="top" horizontal="end" slot="fixed">
+      <ion-fab-button class="person-fab" (click)="showAddNew(!activePerson.ext.addNew,$event)" size='small'>
+        <ion-icon name="person-add"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+    <ion-fab *ngIf="activeIndex === i && showOption" vertical="top" horizontal="start" slot="fixed">
+      <ion-fab-button class="person-fab" (click)="removePerson(i,$event)" size='small'>
+        <ion-icon name="remove"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+  </ion-slide>
+
+  <ion-slide *ngIf='lParent && lParent.ext.addNew'>
+    <ion-avatar class="scroll-item"> <img src="../../../assets/avatar.svg">
+      <ion-input placeholder="name" (focusout)="onInputBlur($event)"></ion-input>
+    </ion-avatar>
+  </ion-slide>
+</ion-slides>
+<ng-container *ngIf='activePerson as ap'>
+  <ion-slides [options]='nestedOpts' #childSlides  (ionSlideDidChange)="onChildSlideChange($event)" >
+    <ion-slide  *ngFor='let p of people'  style="width: 100%;">
+        <app-swiper-row  style="width: 100%"  [parent]=" p"></app-swiper-row>
+        <!-- <app-swiper-row  style="width: 100%"  *ngIf='( ap.ext.sons || ap.ext.addNew )else EOL'  [parent]=" ap"></app-swiper-row> -->
+        <!-- <app-swiper-row  style="width: 100%" [parent]="activePerson"></app-swiper-row> -->
+    </ion-slide>
+  </ion-slides>
+  <ng-template #EOL>
+    <p>EOL</p>
+  </ng-template>
+</ng-container>

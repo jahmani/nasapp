@@ -1,0 +1,89 @@
+ion-avatar { 
+ //   min-width: 100px;  
+    min-width: 80px;  
+    width: 80px;  
+    height: 120px;  
+
+ //   min-width: 70px;
+
+}
+.person-fab {
+    margin: 0px;
+    width: 20px;
+    height: 20px;
+    font-size: 10px;
+}
+ion-avatar {
+    display: flex;
+    flex-direction: column;    /* align flex items vertically */
+    justify-content: center;   /* center items vertically, in this case */
+    align-items: center;       /* center single-line items horizontally, in this case */
+    align-content: center;     /* center multi-line items horizontally, in this case */
+}
+.no-wrap-text
+{
+    overflow: hidden;
+    white-space:nowrap;
+    text-overflow:ellipsis;
+    width:90px;
+    display:inline-block;
+}
+ion-slides {
+   // height: 150px;
+  // max-width: 375.2px;
+   width: 100%;
+}
+.avatar-slide{
+    min-width: 90px;
+margin: 0px;
+// height: 120px;
+//    box-shadow: inset -1px 3px black;
+
+}
+.tree-branch{
+   // border-bottom: 2px solid ;
+ //  height: 12px;
+ background:url(../../../assets/tree-branch.svg);
+ background-repeat: no-repeat;
+ // background-attachment: fixed;
+ background-position: center bottom;
+    //border-image-source:url(../../../assets/tree-branch.svg) 1;
+   // border-image: linear-gradient( 90deg, white, black , white) 1;
+}
+.row-devider{
+    padding-bottom: 12px;
+
+}
+ion-input{
+    --padding-bottom: 2px;
+    --padding-end	:2px;
+    --padding-start: 2px;
+    --padding-top: 2px;
+    max-height: 24px;
+}
+.name-text{
+    padding: 2px; 
+}
+
+.swiper-container {
+    width: 100%;
+  //  height: 130px;
+  }
+.swiper-slide {
+    text-align: center;
+    font-size: 18px;
+    background: #fff;
+    /* Center slide text vertically */
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+  }
