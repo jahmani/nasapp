@@ -1,8 +1,11 @@
 <div class="row-devider" [class.tree-branch]="!isRoot"></div>
 <!-- <p>{{people|json}}</p> -->
-<ion-slides [options]="slidesOpts"  (ionSlideDidChange)="onSlideChange(childSlides)">
+<ion-slides [options]="slidesOpts"  
+(ionSlideDidChange)="onSlideChange(childSlides)"
+(ionSlidesDidLoad)='ionSlidesDidLoad($event)'>
 
-  <ion-slide class="avatar-slide" *ngFor="let person of (lParent? lParent.ext.sons : people), let i=index">
+<!-- <ion-slide class="avatar-slide" *ngFor="let person of (lParent? lParent.ext.sons : people), let i=index;trackBy: trackByFn"> -->
+  <ion-slide class="avatar-slide" *ngFor="let person of lParent.ext.sons, let i=index;trackBy: trackByFn">
     <ion-avatar (click)="onPersonClick(i, $event)" class="scroll-item"> <img src="../../../assets/avatar.svg">
       <span class="no-wrap-text name-text">{{person.data.name}}</span>
     </ion-avatar>
@@ -26,8 +29,8 @@
 </ion-slides>
 <ng-container *ngIf='activePerson as ap'>
   <ion-slides [options]='nestedOpts' #childSlides  (ionSlideDidChange)="onChildSlideChange($event)" >
-    <ion-slide  *ngFor='let p of people'  style="width: 100%;">
-        <app-swiper-row  style="width: 100%"  [parent]=" p"></app-swiper-row>
+    <ion-slide  *ngFor='let p of lParent.ext.sons'  style="width: 100%;">
+        <app-swiper-row *ngIf='!p.ext.parent || p.ext.parent.ext.isExpanded' style="width: 100%"  [parent]=" p"></app-swiper-row>
         <!-- <app-swiper-row  style="width: 100%"  *ngIf='( ap.ext.sons || ap.ext.addNew )else EOL'  [parent]=" ap"></app-swiper-row> -->
         <!-- <app-swiper-row  style="width: 100%" [parent]="activePerson"></app-swiper-row> -->
     </ion-slide>

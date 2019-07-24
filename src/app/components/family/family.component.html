@@ -1,1 +1,1 @@
-<app-swiper-row [people]='people$|async' isRoot=true></app-swiper-row>
+<app-swiper-row *ngIf='nullRoot$|async as nl' [parent]='nl' isRoot=true></app-swiper-row>

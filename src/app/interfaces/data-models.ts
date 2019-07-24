@@ -7,6 +7,7 @@ export interface Person {
 export interface Family {
     people: Person[];
     grandFather: Person[];
+    nullRoot: Person;
     name: string;
     id: string;
     originCity: string;

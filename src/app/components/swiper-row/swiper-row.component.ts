@@ -1,4 +1,5 @@
-import { Component, AfterViewInit, ViewChild, OnInit, ViewChildren, Input, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
+import { Component, AfterViewInit, ViewChild, OnInit, ViewChildren, Input,
+   ChangeDetectorRef, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 // import Swiper from 'swiper';
 import { IonSlides, IonSlide } from '@ionic/angular';
 import { Person, Extended } from 'src/app/interfaces/data-models';
@@ -11,6 +12,8 @@ import { map } from 'rxjs/operators/';
   selector: 'app-swiper-row',
   templateUrl: './swiper-row.component.html',
   styleUrls: ['./swiper-row.component.scss'],
+//  changeDetection: ChangeDetectionStrategy.OnPush,
+
 })
 export class SwiperRowComponent implements OnInit, AfterViewInit {
 
@@ -19,7 +22,7 @@ export class SwiperRowComponent implements OnInit, AfterViewInit {
   // @Output() childeSlideChange = new EventEmitter<number>();
   @ViewChildren(IonSlide) slideColl: IonSlide[];
   @Input() isRoot: boolean;
-  @Input() people: Extended<Person>[];
+  people: Extended<Person>[];
   lParent: Extended<Person>;
   showOption: boolean;
   lAddNew: any;
@@ -27,6 +30,7 @@ export class SwiperRowComponent implements OnInit, AfterViewInit {
   // activePerson$: Observable<Extended<Person>>; // = this.activeIndex$.pipe(map(index => this.people[index]));
   // canProg = true; // : boolean;
   prevChildIndex: number;
+  prevIndex: number;
 
   @Input() set parent(val: Extended<Person>) {
     this.lParent = val;
@@ -86,19 +90,41 @@ export class SwiperRowComponent implements OnInit, AfterViewInit {
      return this.people && this.people[this.activeIndex];
   }
 
+  get prevPerson(): Extended<Person> {
+    // return this.activeIndex$;
+     return this.people && this.people[this.prevIndex];
+  }
+
   constructor(private db: AngularFirestore, private cd: ChangeDetectorRef) {
 
   }
   async onSlideChange(childSlide?: IonSlides) {
     this.activeIndex = await this.slides.getActiveIndex();
+    this.prevIndex = await this.slides.getPreviousIndex();
+    if (this.prevPerson) {
+      this.prevPerson.ext.isExpanded = false;
+    }
     // this.activePerson = this.people[this.activeIndex];
     console.log('slide index: ', this.activeIndex);
     this.activePerson.ext.addNew = false;
+    this.activePerson.ext.isExpanded = true;
     this.showOption = false;
     if (this.childSlides ) {
       this.childSlides.slideTo(this.activeIndex);
       this.prevChildIndex = this.activeIndex;
     }
+  }
+  async ionSlidesDidLoad($event) {
+    if (this.people) {
+      const focudedPErsonIndex = this.people.findIndex(p => p.ext.isExpanded === true);
+      this.slides.slideTo(focudedPErsonIndex);
+    }
+
+    // this.activeIndex = await this.slides.getActiveIndex();
+    // if (this.activePerson) {
+    //   this.activePerson.ext.isExpanded = true;
+    // }
+
   }
 
 
@@ -113,6 +139,9 @@ export class SwiperRowComponent implements OnInit, AfterViewInit {
       // this.childeSlideChange.emit(childIndex);
 
     }
+  }
+  trackByFn(index, item: Extended<Person>) {
+    return item.id; // or item.id
   }
   ngAfterViewInit() {
   }
@@ -132,10 +161,13 @@ export class SwiperRowComponent implements OnInit, AfterViewInit {
     } else {
       this.showOption = !this.showOption;
     }
+    this.activeIndex = i;
+    this.activePerson.ext.isExpanded = true;
+    localStorage.setItem('focused', this.activePerson.id);
   }
   removePerson(i, $event) {
     this.db.collection('people').doc(this.activePerson.id).delete();
-    this.cd.detectChanges();
+    // this.cd.detectChanges();
     // ($event.target as any).value = '';
   }
   onInputBlur($event: CustomEvent) {
